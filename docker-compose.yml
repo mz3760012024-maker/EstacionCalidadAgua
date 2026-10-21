@@ -1,0 +1,20 @@
+# Base de datos PostgreSQL para el backend. Uso: docker compose up -d
+services:
+  db:
+    image: postgres:16
+    container_name: aguadb
+    environment:
+      POSTGRES_DB: ${DB_NAME:-aguadb}
+      POSTGRES_USER: ${DB_USER:-aguauser}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-aguapass_dev}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - aguadb_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-aguauser} -d ${DB_NAME:-aguadb}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+volumes:
+  aguadb_data:
